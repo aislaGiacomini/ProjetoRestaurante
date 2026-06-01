@@ -123,7 +123,7 @@ require("cabecalho.php");
                     <div class="dashboard-icon">🧾</div>
                     <h4>Pedidos</h4>
                     <p>Controle pedidos realizados pelos clientes.</p>
-                    <a href="pedidos.php" class="btn btn-dashboard">
+                    <a href="novoPedido.php" class="btn btn-dashboard">
                         Acessar
                     </a>
                 </div>

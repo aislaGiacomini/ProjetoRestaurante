@@ -1,57 +1,90 @@
 <?php
-    require("cabecalho.php");
+require("cabecalho.php");
+require("conexao.php");
+
+$pedidos = [];
+
+if (isset($_GET['inicio']) && isset($_GET['fim'])) {
+
+    $inicio = $_GET['inicio'];
+    $fim = $_GET['fim'];
+
+    $stmt = $pdo->prepare("
+        SELECT p.id, p.data, c.nome AS cliente, m.numero AS mesa
+        FROM pedidos p
+        JOIN clientes c ON c.id = p.id_cliente
+        JOIN mesas m ON m.id = p.id_mesa
+        WHERE p.data BETWEEN ? AND ?
+        ORDER BY p.data ASC
+    ");
+
+    $stmt->execute([$inicio, $fim]);
+    $pedidos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 ?>
-<div class="container mt-5">
-    <h1 class="mb-4">Relatório de Pedidos</h1>
 
-    <!-- Formulário -->
-    <form method="get" class="row g-3 mb-4">
-        <div class="col-md-4">
-            <label for="inicio" class="form-label">Data inicial</label>
-            <input type="date" id="inicio" name="inicio" class="form-control">
-        </div>
-        <div class="col-md-4">
-            <label for="fim" class="form-label">Data final</label>
-            <input type="date" id="fim" name="fim" class="form-control">
-        </div>
-        <div class="col-md-4 d-flex align-items-end">
-            <button type="submit" class="btn btn-primary w-100">Gerar Relatório</button>
-        </div>
-    </form>
+<div class="container mt-4">
 
-    <!-- Resultados -->
-    <div class="card">
-        <div class="card-body">
-            <?php
-            if (isset($_GET['inicio']) && isset($_GET['fim'])) {
-                $data_inicial = $_GET['inicio'];
-                $data_final = $_GET['fim'];
+<h1>Relatório de Pedidos</h1>
 
-                $sql = "SELECT * FROM pedidos WHERE data BETWEEN '$data_inicial' AND '$data_final'";
-                $result = $conn->query($sql);
+<!-- FORMULÁRIO -->
+<form method="get" class="row g-3 mb-4">
 
-                if ($result->num_rows > 0) {
-                    echo "<table class='table table-striped'>";
-                    echo "<thead><tr><th>ID Pedido</th><th>Cliente</th><th>Mesa</th><th>Data</th></tr></thead><tbody>";
-                    while ($row = $result->fetch_assoc()) {
-                        echo "<tr>
-                                <td>{$row['id']}</td>
-                                <td>{$row['id_cliente']}</td>
-                                <td>{$row['id_mesa']}</td>
-                                <td>{$row['data']}</td>
-                              </tr>";
-                    }
-                    echo "</tbody></table>";
-                } else {
-                    echo "<p class='text-muted'>Nenhum pedido encontrado nesse período.</p>";
-                }
-            } else {
-                echo "<p class='text-muted'>Selecione um período para gerar o relatório.</p>";
-            }
-            ?>
-        </div>
+    <div class="col-md-5">
+        <label>Data inicial</label>
+        <input type="date" name="inicio" class="form-control" required>
     </div>
+
+    <div class="col-md-5">
+        <label>Data final</label>
+        <input type="date" name="fim" class="form-control" required>
+    </div>
+
+    <div class="col-md-2 d-flex align-items-end">
+        <button class="btn btn-primary w-100">
+            Gerar
+        </button>
+    </div>
+
+</form>
+
+<!-- RESULTADO -->
+<table class="table table-striped">
+
+    <thead>
+        <tr>
+            <th>ID Pedido</th>
+            <th>Cliente</th>
+            <th>Mesa</th>
+            <th>Data</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        <?php if (count($pedidos) > 0): ?>
+
+            <?php foreach ($pedidos as $p): ?>
+                <tr>
+                    <td><?= $p['id'] ?></td>
+                    <td><?= $p['cliente'] ?></td>
+                    <td>Mesa <?= $p['mesa'] ?></td>
+                    <td><?= $p['data'] ?></td>
+                </tr>
+            <?php endforeach; ?>
+
+        <?php else: ?>
+            <tr>
+                <td colspan="4" class="text-center">
+                    Nenhum pedido encontrado
+                </td>
+            </tr>
+        <?php endif; ?>
+
+    </tbody>
+
+</table>
+
 </div>
-<?php
-  require("rodape.php");
-?>
+
+<?php require("rodape.php"); ?>

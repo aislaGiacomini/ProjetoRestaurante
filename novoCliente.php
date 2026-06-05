@@ -9,8 +9,15 @@
     }
 
 ?>
+<div class="container mt-4">
 
-<h1>Novo cliente</h1>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Cadastro de Clientes</h1>
+
+        <a href="principal.php" class="btn btn-outline-secondary">
+            ← Voltar
+        </a>
+    </div>
 <form method="post">
     <div class="mb-3">
         <label for="nome" class="form-label">Informe o nome</label>
@@ -24,8 +31,8 @@
 </form>
 <?php
 
-$result = $pdo->query("SELECT * FROM clientes");
-$clientes = $result->fetchAll(PDO::FETCH_ASSOC);
+    $result = $pdo->query("SELECT * FROM clientes");
+    $clientes = $result->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 
@@ -48,16 +55,12 @@ $clientes = $result->fetchAll(PDO::FETCH_ASSOC);
             <td><?= $cliente['nome'] ?></td>
             <td><?= $cliente['telefone'] ?></td>
             <td>
-                <a href="editarCliente.php?id=<?= $cliente['id'] ?>"
-                   class="btn btn-warning btn-sm">
-                    Editar
-                </a>
-
-                <a href="excluirCliente.php?id=<?= $cliente['id'] ?>"
-                   class="btn btn-danger btn-sm"
-                   onclick="return confirm('Deseja realmente excluir este cliente?')">
-                    Excluir
-                </a>
+                <button
+                        type="button"
+                        class="btn btn-warning"
+                        onclick="window.location.href='editarCliente.php?id=<?= $cliente['id'] ?>'">
+                        Editar
+                </button>
             </td>
 
         </tr>

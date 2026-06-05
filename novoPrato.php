@@ -1,7 +1,7 @@
 <?php
     require("cabecalho.php");
     require("conexao.php");
-    if (isset($_POST['nome'])) {
+    if (isset($_POST['nome'])) { #Verificar se True
         $nome = $_POST['nome'];
         $preco = $_POST['preco'];
         $descricao = $_POST['descricao'];
@@ -10,8 +10,15 @@
     }
     
 ?>
+<div class="container mt-4">
 
-<h1>Novo Prato</h1>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Novo prato</h1>
+
+        <a href="principal.php" class="btn btn-outline-secondary">
+            ← Voltar
+        </a>
+    </div>
 <form method="post">
     <div class="mb-3">
         <label for="nome" class="form-label">Informe o nome</label>
@@ -29,8 +36,8 @@
 </form>
 <?php
 
-$result = $pdo->query("SELECT * FROM pratos");
-$pratos = $result->fetchAll(PDO::FETCH_ASSOC);
+    $result = $pdo->query("SELECT * FROM pratos"); #Pesquisa no banco
+    $pratos = $result->fetchAll(PDO::FETCH_ASSOC); #Faz o array
 
 ?>
 
@@ -57,16 +64,12 @@ $pratos = $result->fetchAll(PDO::FETCH_ASSOC);
             <td>R$ <?= number_format($prato['preco'], 2, ',', '.') ?></td>
 
             <td>
-                <a href="editarPrato.php?id=<?= $prato['id'] ?>"
-                   class="btn btn-warning btn-sm">
-                    Editar
-                </a>
-
-                <a href="excluirPrato.php?id=<?= $prato['id'] ?>"
-                   class="btn btn-danger btn-sm"
-                   onclick="return confirm('Deseja realmente excluir este prato?')">
-                    Excluir
-                </a>
+                <button
+                        type="button"
+                        class="btn btn-warning"
+                        onclick="window.location.href='editarPrato.php?id=<?= $prato['id'] ?>'">
+                        Editar
+                </button>
             </td>
 
         </tr>

@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $id_mesa = $_POST['id_mesa'];
     $data = date('Y-m-d');
 
-    // 1. cria o pedido
+    // cria o pedido
     $stmt = $pdo->prepare("
         INSERT INTO pedidos (id_cliente, id_mesa, data)
         VALUES (?, ?, ?)
@@ -19,18 +19,25 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     $stmt->execute([$id_cliente, $id_mesa, $data]);
 
-    // 2. pega o ID do pedido criado
+    // pega o ID do pedido criado
     $id_pedido = $pdo->lastInsertId();
 
-    // 3. vai para itens do pedido
+    // vai para itens do pedido
     header("Location: itensPedido.php?id_pedido=$id_pedido");
     exit;
 }
 ?>
 
 <div class="container mt-4">
+<div class="container mt-4">
 
-<h1>Novo Pedido</h1>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Novo pedido</h1>
+
+        <a href="principal.php" class="btn btn-outline-secondary">
+            ← Voltar
+        </a>
+    </div>
 
 <form method="post">
 

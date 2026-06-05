@@ -1,5 +1,5 @@
 <?php
-  session_start();
+  session_start(); #Apenas para login 
   if(!isset($_SESSION['acesso']))
     header('location: index.php');
 ?>
@@ -68,10 +68,11 @@
           </li>
 
           <li class="nav-item">
-            <a class="nav-link" href="relatorios.php">Relatórios</a>
+            <a class="nav-link" href="logout.php">Sair</a>
         </ul>
       </div>
     </div>
   </nav>
 
   <div class="container py-3">
+

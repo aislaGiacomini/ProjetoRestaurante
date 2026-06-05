@@ -29,7 +29,7 @@
 </head>
 <body class="bg-body overflow-hidden">
   <?php
-      if (isset($_GET['cadastro'])) {
+      if (isset($_GET['cadastro'])) { #tela de cadastro 
         $cadastro = $_GET['cadastro'];
         if ($cadastro) {
           echo "<p class='text-success'>Cadastro realizado com sucesso!</p>";
@@ -38,14 +38,14 @@
         }
       }
       if($_SERVER['REQUEST_METHOD'] == "POST"){
-        require('conexao.php');
-        $email = $_POST['email'];
+        require('conexao.php'); #incluir o conexao
+        $email = $_POST['email']; #verifica email e senha 
         $senha = $_POST['senha'];
         try{
-          $stmt = $pdo->prepare("SELECT * FROM usuario WHERE email = ?");
-          $stmt->execute([$email]);
-          $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-          if($usuario && password_verify($senha, $usuario['senha'])){
+          $stmt = $pdo->prepare("SELECT * FROM usuario WHERE email = ?"); #consuta no banco
+          $stmt->execute([$email]); #executa a consulta
+          $usuario = $stmt->fetch(PDO::FETCH_ASSOC); #retorna o valor e cria o array
+          if($usuario && password_verify($senha, $usuario['senha'])){ 
             session_start();
             $_SESSION['acesso'] = true;
             $_SESSION['nome'] = $usuario['nome'];
@@ -66,11 +66,10 @@
       <div class="col-lg-7 d-none d-lg-flex align-items-end login-banner p-5">
         <div class="text-white" style="max-width:500px">
           <h1 class="display-4 fw-bold lh-sm mb-3">
-            Gerencie seu restaurante com eficiência
+            Gerencie seu restaurante 
           </h1>
           <p class="fs-5 text-secondary lh-base mb-0">
-            Controle mesas, pedidos, cozinha e caixa
-            em uma plataforma moderna e rápida.
+            Controle com eficiência
           </p>
         </div>
       </div>

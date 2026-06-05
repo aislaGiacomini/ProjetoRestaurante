@@ -135,5 +135,5 @@ require("cabecalho.php");
 </div>
 
 <?php
-require("rodape.php");
+require("rodape.php"); 
 ?>

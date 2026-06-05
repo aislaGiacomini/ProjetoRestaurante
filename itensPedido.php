@@ -2,6 +2,10 @@
 require("cabecalho.php");
 require("conexao.php");
 
+if (!isset($_GET['id_pedido'])) {
+    die("Pedido não informado.");
+}
+
 $id_pedido = $_GET['id_pedido'];
 
 $pratos = $pdo->query("SELECT * FROM pratos")->fetchAll(PDO::FETCH_ASSOC);
@@ -12,23 +16,25 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $id_prato = $_POST['id_prato'];
     $quantidade = $_POST['quantidade'];
 
-
+    // Busca o preço do prato
     $stmt = $pdo->prepare("SELECT preco FROM pratos WHERE id = ?");
     $stmt->execute([$id_prato]);
     $prato = $stmt->fetch(PDO::FETCH_ASSOC);
 
     $preco = $prato['preco'];
 
-    // salva item
+    // Salva o item
     $stmt = $pdo->prepare("
         INSERT INTO pedido_itens (id_pedido, id_prato, quantidade, preco)
         VALUES (?, ?, ?, ?)
     ");
 
-    $stmt->execute([$id_pedido, $id_prato, $quantidade, $preco]);
-
-    header("Location: itensPedido.php?id_pedido=$id_pedido&sucesso=true");
-    exit;
+    if ($stmt->execute([$id_pedido, $id_prato, $quantidade, $preco])) {
+        header("Location: itensPedido.php?id_pedido=$id_pedido&sucesso=true");
+        exit;
+    } else {
+        echo "<div class='alert alert-danger'>Erro ao adicionar item.</div>";
+    }
 }
 
 $stmt = $pdo->prepare("
@@ -37,8 +43,10 @@ $stmt = $pdo->prepare("
     JOIN pratos p ON p.id = ip.id_prato
     WHERE ip.id_pedido = ?
 ");
+
 $stmt->execute([$id_pedido]);
 $itens = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 $total = 0;
 
 foreach ($itens as $i) {
@@ -48,7 +56,15 @@ foreach ($itens as $i) {
 
 <div class="container mt-4">
 
-<h1>Itens do Pedido #<?= $id_pedido ?></h1>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Itens do Pedido #<?= $id_pedido ?></h1>
+
+        <a href="novoPedido.php" class="btn btn-outline-secondary">
+            ← Voltar
+        </a>
+    </div>
+
+
 
 <?php if (isset($_GET['sucesso'])): ?>
     <div class="alert alert-success">
@@ -103,16 +119,53 @@ foreach ($itens as $i) {
                     R$ <?= number_format($item['quantidade'] * $item['preco'], 2, ',', '.') ?>
                 </td>
                 <td>
-                    <a href="editarPedido.php?id=<?= $p['id'] ?>" 
-                    class="btn btn-warning btn-sm">
+                    <button
+                        type="button"
+                        class="btn btn-warning"
+                        onclick="window.location.href='editarPedido.php?id=<?= $item['id'] ?>'">
                         Editar
-                    </a>
+                    </button>
 
-                    <a href="excluirPedido.php?id=<?= $p['id'] ?>" 
-                    class="btn btn-danger btn-sm"
-                    onclick="return confirm('Deseja realmente excluir este pedido?')">
+                    <button
+                        type="button"
+                        class="btn btn-danger"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalExcluir<?= $item['id'] ?>">
                         Excluir
-                    </a>
+                    </button>
+                    <div class="modal fade" id="modalExcluir<?= $item['id'] ?>" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar exclusão</h5>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                Deseja realmente excluir o item
+                <strong><?= $item['nome'] ?></strong>?
+            </div>
+
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+                    Cancelar
+                </button>
+
+                <a href="excluirPedido.php?id=<?= $item['id'] ?>"
+                   class="btn btn-danger">
+                    Excluir
+                </a>
+            </div>
+
+        </div>
+    </div>
+    </div>
+</div>
                 </td>
             </tr>
         <?php endforeach; ?>

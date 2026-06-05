@@ -39,6 +39,14 @@
   </style>
 </head>
 <body>
+  <body>
+
+<div class="container mt-3">
+    <a href="index.php" class="btn btn-outline-warning">
+        ← Voltar
+    </a>
+</div>
+<div class="container d-flex justify-content-center align-items-center" style="min-height:90vh;">
   <div class="container d-flex justify-content-center align-items-center" style="min-height:100vh;">
     <div class="card p-4 shadow-lg rounded-3" style="width: 100%; max-width: 500px;">
       <h2 class="mb-4 text-center">Cadastro de Usuário</h2>

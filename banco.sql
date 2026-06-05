@@ -83,6 +83,7 @@ CREATE TABLE IF NOT EXISTS `restaurante`.`pedido_itens` (
   `id_pedido` INT(11) NULL DEFAULT NULL,
   `id_prato` INT(11) NULL DEFAULT NULL,
   `quantidade` INT(11) NOT NULL,
+  `preco` DECIMAL NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `id_pedido` (`id_pedido` ASC),
   INDEX `id_prato` (`id_prato` ASC),

@@ -11,11 +11,16 @@
 ?>
 
 <body class="bg-light">
+    <div class="container mt-4">
 
-<div class="container mt-5">
-    <h1 class="mb-4">Cadastro de Mesas</h1>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Cadastro de Mesas</h1>
 
-    <!-- Formulário -->
+        <a href="principal.php" class="btn btn-outline-secondary">
+            ← Voltar
+        </a>
+    </div>
+
     <form method="post" class="row g-3 mb-4">
         <div class="col-md-6">
             <label for="numero" class="form-label">Número da Mesa</label>
@@ -50,20 +55,15 @@
     <?php foreach($mesas as $mesa): ?>
 
         <tr>
-            <td><?= $mesa['id'] ?></td>
             <td><?= $mesa['numero'] ?></td>
             <td><?= $mesa['capacidade'] ?></td>
             <td>
-                <a href="editarMesa.php?id=<?= $mesa['id'] ?>"
-                   class="btn btn-warning btn-sm">
-                    Editar
-                </a>
-
-                <a href="excluirMesa.php?id=<?= $mesa['id'] ?>"
-                   class="btn btn-danger btn-sm"
-                   onclick="return confirm('Deseja realmente excluir este cliente?')">
-                    Excluir
-                </a>
+                <button
+                        type="button"
+                        class="btn btn-warning"
+                        onclick="window.location.href='editarMesa.php?id=<?= $mesa['id'] ?>'">
+                        Editar
+                </button>
             </td>
 
         </tr>

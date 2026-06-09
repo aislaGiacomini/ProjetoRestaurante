@@ -44,7 +44,6 @@
     <table class="table table-striped table-hover">
         <thead>
             <tr>
-                <th>ID</th>
                 <th>Numero</th>
                 <th>Capacidade</th>
             </tr>
